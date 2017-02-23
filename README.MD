@@ -28,7 +28,7 @@ Translationpy will extract one JSON file per column, using the first row as file
 ### Options
 
 |Flag|Option|Example|Default|
-|---------------------|
+|----|------|-------|-------|
 |`--out-dir`|specify the output directory|`--out-dir=translations`|`export/`|
 |`--sheets`|process only the specified sheets|`--sheets=Login,Container`, `--sheets=*`|only the active sheet|
 |`--prologue`|a string to prepend to the dumped JSON variable|`--prologue="const translations = "`|-|
