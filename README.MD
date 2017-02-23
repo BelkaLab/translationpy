@@ -1,5 +1,5 @@
 # translationpy
-**Translationpy** is a simple Python script to automatically extract tranlsations from an excel file and create the needed JSON files to be used by [polyglot.js](http://airbnb.io/polyglot.js/)
+**Translationpy** is a Python script to automatically extract tranlsations from an excel file and create the needed JSON files to be used by [polyglot.js](http://airbnb.io/polyglot.js/)
 
 ## Install
 The script usage is really simple, take a cup of coffee and install the following Python library:
@@ -17,6 +17,7 @@ Done :)
 ## How to use it 
 ### Input File
 The script input file must be an Excel file (.xlsx) formatted like the screenshot below.
+
 - Define the first column "A" as the label column.
 - Define the second column "B" and following columns as the translation columns.
 
@@ -28,9 +29,26 @@ Translationpy will extract one JSON file per column, using the first row as file
 
 |Flag|Option|Example|Default|
 |---------------------|
-|`--out-dir`|Specify the output dir|`--out-dir=translations`|`export/`|
-|`--sheets`|Specify which sheets to process|`--sheets=Login,Container`, `--sheets= *`|Only active sheet|
+|`--out-dir`|specify the output directory|`--out-dir=translations`|`export/`|
+|`--sheets`|process only the specified sheets|`--sheets=Login,Container`, `--sheets=*`|only the active sheet|
+|`--prologue`|a string to prepend to the dumped JSON variable|`--prologue="const translations = "`|-|
+|`--epilogue`|a string to append to the dumped JSON variable|`--epilogue=";\n\nexport default translations;\n"`|-|
+|`--format`|output files format {js, json, jsonp}|`--format=js`|`json`|
+|`--schema`|honour the given schema in output files|`--schema=schema.json`|-|
+|`--force`|force insertion of keys not found in given schema|`--schema=schema.json --force`|`false`|
+|`--flatten-keys`|make the output a flat dictionary|`--flatten-keys`|`false`|
 
+### Using a pre-existing schema
+If an existing JSON file is given through the `--schema` flag, the script will load it and use it to verify and keep the outputted keys ordered.
+
+Otherwise, the dictionary structure will be automatically generated; in this case, key ordering will be given by the first occourrence of any new dictionary sub-key.
+
+Additionally, you can print a flattened, alphabetically-sorted dictionary (ie: having depth 1) using the `--flatten-keys` option.
+
+## Caveats and pitfalls
+ - Rows #1 and #2 **must** contain the language tag and the language name.
+ - Always ensure that the first column has no empty rows between keys, otherwise the keys order will be broken.
+ - Columns missing a value in the first or second row (ie: language tag or language name) will be skipped.
 
 ## License
 translationpy is Copyright (c) 2017 Belka, srl. It is free software, and may be redistributed under the terms specified in the LICENSE file.  
