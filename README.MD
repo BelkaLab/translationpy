@@ -1,5 +1,5 @@
 # translationpy
-Translationpy is a simple Python script to automatically extract and create translation files.
+**Translationpy** is a simple Python script to automatically extract tranlsations from an excel file and create the needed JSON files to be used by [polyglot.js](http://airbnb.io/polyglot.js/)
 
 ## Install
 The script usage is really simple, take a cup of coffee and install the following Python library:
@@ -10,7 +10,7 @@ $ pip install openpyxl
 then, execute the script
 
 ```bash 
-$ python translationpy.py input.excel output-folder
+$ python translationpy.py translations.xlsx
 ```  
 Done :)
 
@@ -22,13 +22,18 @@ The script input file must be an Excel file (.xlsx) formatted like the screensho
 
 ![Alt Text](https://s29.postimg.org/wdq8t426f/Schermata+2016-03-30+alle+18.05.32.png)
 
-Translationpy will extract one JSON file per column, using the first row as file names. Each file will be in the key: value form, where key is always the value coming from the first column.
+Translationpy will extract one JSON file per column, using the first row as file names. Each file will be in the `key: value` form, where key is always the value coming from the first column.
 
-### Output folder
-You should specify the output folder where the script will save the translation files after the elaboration process (defaults to output/). 
+### Options
+
+|Flag|Option|Example|Default|
+|---------------------|
+|`--out-dir`|Specify the output dir|`--out-dir=translations`|`export/`|
+|`--sheets`|Specify which sheets to process|`--sheets=Login,Container`, `--sheets= *`|Only active sheet|
+
 
 ## License
-translationpy is Copyright (c) 2016 Belka, srl. It is free software, and may be redistributed under the terms specified in the LICENSE file.  
+translationpy is Copyright (c) 2017 Belka, srl. It is free software, and may be redistributed under the terms specified in the LICENSE file.  
 
 ## About Belka
 ![Alt text](http://s2.postimg.org/rcjk3hf5x/logo_rosso.jpg)
