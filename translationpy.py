@@ -78,7 +78,9 @@ def createNestedKeysFile(column, keys, jsonSchema):
 	with io.open(filename, 'w', encoding='utf-8') as outfile:
 		if prologue:
 			outfile.write(unicode(prologue))
+
 		outfile.write(json.dumps(translatedDict, ensure_ascii=False, indent=2, sort_keys=flatten_keys))
+		
 		if epilogue:
 			outfile.write(unicode(epilogue))
 
@@ -116,8 +118,8 @@ if __name__ == '__main__':
 
 	args = parser.parse_args()
 
-	prologue = args.prologue
-	epilogue = args.epilogue
+	prologue = args.prologue.replace('\\n', '\n') # fix newlines!
+	epilogue = args.epilogue.replace('\\n', '\n') # fix newlines!
 	file_format = args.format
 	force_insertion = args.force
 	flatten_keys = args.flatten_keys
