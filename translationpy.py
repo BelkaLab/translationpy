@@ -8,11 +8,7 @@ from os import path, makedirs
 import argparse
 import json
 import io
-
-# nested dict allow us to create keys more easily, using nesting syntax
-# see http://stackoverflow.com/a/16724937/2304450
-import collections
-nested_dict = lambda: collections.defaultdict(nested_dict)
+import copy
 
 directory = 'export/'
 prologue = None
@@ -20,6 +16,13 @@ epilogue = None
 file_format = 'json'
 force_insertion = False
 flatten_keys = False
+
+# http://stackoverflow.com/a/18809656/2304450
+from collections import OrderedDict
+class NestedOrderedDict(OrderedDict):
+    def __missing__(self, key):
+        val = self[key] = NestedOrderedDict()
+        return val
 
 # two super useful utils to get/set a key recursively
 # http://stackoverflow.com/a/14692747/2304450
@@ -37,7 +40,7 @@ def getFromDict(dataDict, mapList):
 def setInDict(dataDict, mapList, value):
 	getFromDict(dataDict, mapList[:-1])[mapList[-1]] = value
 
-def createNestedKeysFile(column, keys, jsonSchema):
+def createNestedKeysFile(column, keys, jsonSchema, immutableJsonSchema):
 	langCode = column[0].value
 	langName = column[1].value
 	if langName is None or langCode is None:
@@ -48,7 +51,7 @@ def createNestedKeysFile(column, keys, jsonSchema):
 
 	print('  Processing ' + langName)
 
-	translatedDict = nested_dict()
+	translatedDict = (copy.deepcopy(jsonSchema), NestedOrderedDict())[jsonSchema is None]
 
 	for index, cell in enumerate(column):
 		if index > 1 and index < keys.__len__():
@@ -59,7 +62,7 @@ def createNestedKeysFile(column, keys, jsonSchema):
 			value = cell.value.replace('"', '\\"')
 
 			if jsonSchema:
-				if getFromDict(jsonSchema, key.split('.')) is not None:
+				if getFromDict(immutableJsonSchema, key.split('.')) is not None:
 					setInDict(translatedDict, key.split('.'), value)
 				else:
 					if force_insertion:
@@ -88,9 +91,12 @@ def process(sheet, schema):
 	keys = []
 
 	jsonSchema = None
+	immutableJsonSchema = None
 	if schema is not None:
 		with open(schema, 'r') as schema_file:
-			jsonSchema = json.load(schema_file)
+			jsonSchema = json.load(schema_file, object_pairs_hook=NestedOrderedDict)
+		with open(schema, 'r') as schema_file:
+			immutableJsonSchema = json.load(schema_file, object_pairs_hook=OrderedDict)
 
 	for column in sheet.columns:
 		# generate the keys list
@@ -99,7 +105,7 @@ def process(sheet, schema):
 				if cell.value is not None:
 					keys.append(cell.value)
 		else:
-			createNestedKeysFile(column, keys, jsonSchema)
+			createNestedKeysFile(column, keys, jsonSchema, immutableJsonSchema)
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(
