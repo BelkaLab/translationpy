@@ -51,7 +51,7 @@ Additionally, you can print a flattened, alphabetically-sorted dictionary (ie: h
  - Columns missing a value in the first or second row (ie: language tag or language name) will be skipped.
 
 ## License
-translationpy is Copyright (c) 2017 Belka, srl. It is free software, and may be redistributed under the terms specified in the LICENSE file.  
+translationpy is Copyright (c) 2016-2018 Belka srl. It is free software, and may be redistributed under the terms specified in the LICENSE file.  
 
 ## About Belka
 ![Alt text](http://s2.postimg.org/rcjk3hf5x/logo_rosso.jpg)
